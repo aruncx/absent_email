@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2024 B.Tech EEE (S5) - Student Absent Email Portal</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:0;background:linear-gradient(135deg,#0b57d0,#0b8457);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.card{background:#fff;max-width:760px;width:100%;padding:32px;border-radius:18px;box-shadow:0 15px 40px rgba(0,0,0,.2)}
+h1{margin:0;color:#0b57d0;text-align:center}
+h2{text-align:center;color:#444;font-weight:500}
+.info{background:#eef6ff;border-left:5px solid #0b57d0;padding:14px;border-radius:10px;margin:18px 0}
+label{display:block;margin-top:14px;font-weight:600}
+input,textarea{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
+button{width:100%;margin-top:22px;padding:14px;border:none;border-radius:10px;background:#0b57d0;color:#fff;font-size:18px;cursor:pointer}
+small{color:#666}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Vidya Academy of Science and Technology, Thrissur</h1>
+<h2>2024 B.Tech Electrical & Electronics Engineering<br>Semester 5 (S5) – Student Absent Email Portal</h2>
+
+<div class="info">
+<b>Class Tutors</b>
+<ul>
+<li>Mr. Krishnakumar M</li>
+<li>Mr. Arun Xavier</li>
+<li>Ms. Lasitha Mohandas</li>
+</ul>
+<small>Select the absence date, enter your details, then click <b>Send Absent Email</b>.</small>
+</div>
+
+<label>Student Name</label>
+<input id="name" placeholder="Enter your full name">
+
+<label>Roll Number</label>
+<input id="roll" placeholder="Enter your roll number">
+
+<label>Date of Absence</label>
+<input type="date" id="leaveDate">
+
+<label>Reason for Leave</label>
+<textarea id="reason" rows="5" placeholder="Briefly explain the reason"></textarea>
+
+<button onclick="sendMail()">📧 Send Absent Email</button>
+</div>
+
+<script>
+document.getElementById("leaveDate").valueAsDate=new Date();
+
+function fmt(d){
+ const dt=new Date(d);
+ return ("0"+dt.getDate()).slice(-2)+"/"+("0"+(dt.getMonth()+1)).slice(-2)+"/"+dt.getFullYear();
+}
+
+function sendMail(){
+ const date=document.getElementById("leaveDate").value;
+ if(!date){alert("Please select the date of absence.");return;}
+ const fdate=fmt(date);
+ const name=document.getElementById("name").value.trim();
+ const roll=document.getElementById("roll").value.trim();
+ const reason=document.getElementById("reason").value.trim();
+
+ const subject="Absent - "+fdate;
+ const body=`Dear Sir/Madam,
+
+I am unable to attend the classes.
+
+Date              : ${fdate}
+College           : Vidya Academy of Science and Technology, Thrissur
+Programme         : B.Tech
+Branch/Semester   : EEE / S5
+Admission Batch   : 2024
+
+Student Name      : ${name}
+Roll Number       : ${roll}
+Reason for Leave  : ${reason}
+
+Kindly grant me leave.
+
+Thank you.
+
+Regards,
+${name}`;
+
+ const to="arun.x@vidyaacademy.ac.in,lasitha896@vidyaacademy.ac.in,krishnakumar@vidyaacademy.ac.in";
+ location.href="mailto:"+to+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+}
+</script>
+</body>
+</html>
