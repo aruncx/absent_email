@@ -14,6 +14,22 @@ label{display:block;margin-top:14px;font-weight:600}
 input,textarea{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
 button{width:100%;margin-top:22px;padding:14px;border:none;border-radius:10px;background:#0b57d0;color:#fff;font-size:18px;cursor:pointer}
 small{color:#666}
+ .leave-options{
+    display:flex;
+    gap:20px;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.leave-options input{
+    width:auto;
+    margin-right:6px;
+}
+
+#sessionDiv{
+    display:none;
+    margin-top:10px;
+}
 </style>
 </head>
 <body>
@@ -40,6 +56,54 @@ small{color:#666}
 <label>Date of Absence</label>
 <input type="date" id="leaveDate">
 
+<label>Leave Type</label>
+
+<div class="leave-options">
+
+<label>
+<input type="radio"
+name="leaveType"
+value="Full Day"
+checked
+onclick="toggleSession()">
+Full Day
+</label>
+
+<label>
+<input type="radio"
+name="leaveType"
+value="Half Day"
+onclick="toggleSession()">
+Half Day
+</label>
+
+</div>
+
+<div id="sessionDiv">
+
+<label>Session</label>
+
+<div class="leave-options">
+
+<label>
+<input type="radio"
+name="session"
+value="FN"
+checked>
+Forenoon (FN)
+</label>
+
+<label>
+<input type="radio"
+name="session"
+value="AN">
+Afternoon (AN)
+</label>
+
+</div>
+
+</div>
+
 <label>Reason for Leave</label>
 <textarea id="reason" rows="5" placeholder="Briefly explain the reason"></textarea>
 
@@ -54,20 +118,57 @@ function fmt(d){
  return ("0"+dt.getDate()).slice(-2)+"/"+("0"+(dt.getMonth()+1)).slice(-2)+"/"+dt.getFullYear();
 }
 
-function sendMail(){
- const date=document.getElementById("leaveDate").value;
- if(!date){alert("Please select the date of absence.");return;}
- const fdate=fmt(date);
- const name=document.getElementById("name").value.trim();
- const roll=document.getElementById("roll").value.trim();
- const reason=document.getElementById("reason").value.trim();
+ function toggleSession(){
 
- const subject = "Absent | " + name + " | " + fdate;
- const body=`Dear Sir/Madam,
+    const leaveType =
+    document.querySelector('input[name="leaveType"]:checked').value;
+
+    document.getElementById("sessionDiv").style.display =
+        leaveType === "Half Day" ? "block" : "none";
+
+}
+
+function sendMail(){
+
+    const date=document.getElementById("leaveDate").value;
+
+    if(!date){
+        alert("Please select the date of absence.");
+        return;
+    }
+
+    const fdate=fmt(date);
+
+    const name=document.getElementById("name").value.trim();
+
+    const roll=document.getElementById("roll").value.trim();
+
+    const reason=document.getElementById("reason").value.trim();
+
+    const leaveType =
+    document.querySelector('input[name="leaveType"]:checked').value;
+
+    let leaveText = leaveType;
+
+    if(leaveType==="Half Day"){
+
+        const session =
+        document.querySelector('input[name="session"]:checked').value;
+
+        leaveText = "Half Day (" + session + ")";
+
+    }
+
+    const subject =
+    "Absent | " + name + " | " + fdate + " | " + leaveText;
+
+    const body=`Dear Sir/Madam,
 
 I am unable to attend the classes.
 
 Date              : ${fdate}
+Leave Type        : ${leaveText}
+
 College           : Vidya Academy of Science and Technology, Thrissur
 Programme         : B.Tech
 Branch/Semester   : EEE / S5
@@ -75,6 +176,7 @@ Admission Batch   : 2024
 
 Student Name      : ${name}
 Roll Number       : ${roll}
+
 Reason for Leave  : ${reason}
 
 Kindly grant me leave.
@@ -84,8 +186,13 @@ Thank you.
 Regards,
 ${name}`;
 
- const to="arun.x@vidyaacademy.ac.in,lasitha896@vidyaacademy.ac.in,krishnakumar@vidyaacademy.ac.in";
- location.href="mailto:"+to+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+    const to="arun.x@vidyaacademy.ac.in,lasitha896@vidyaacademy.ac.in,krishnakumar@vidyaacademy.ac.in";
+
+    location.href=
+    "mailto:"+to+
+    "?subject="+encodeURIComponent(subject)+
+    "&body="+encodeURIComponent(body);
+
 }
 </script>
 </body>
